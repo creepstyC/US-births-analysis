@@ -1,0 +1,66 @@
+---
+title: "US Birth Analysis"
+author: "Grupo A"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    theme: journal
+    toc: yes
+    toc_float:
+      collapsed: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(DT)
+```
+
+# Colaboradores
++ Marlon Barajas Acelas - 2202042
++ Jose Gabriel Tomas Zapata - 2201779
+
+# Dataset asignado
+[**US Births**](https://www.openintro.org/data/index.php?data=births14) es un dataset que contiene información sobre mil nacimientos tomados de manera aleatoria en EE. UU. para el año 2014. Las variables tomadas (13) son, entre otras, las edades del padre y de la madre, la cantidad de semanas en gestación, el número de visitas al hospital, el peso ganado por la madre durante el embarazo y datos básicos sobre el bebé.
+
+## Carga del dataset
+```{r}
+df <- read.csv("births14.csv")
+datatable(df, options = list(scrollX = TRUE))
+```
+
+# Estudio de las variables
+
+## Descripción de las variables
+| Variable| Descripción|
+| --------| -----------|
+| **fage**| Edad del padre.|
+| **mage**| Edad de la madre.|
+| **mature**| Estado de madurez de la madre.|
+| **weeks**| Cantidad de semanas de gestación.|
+| **premie**| Clasificación del nacimiento, como prematuro o a término.|
+| **visits**| Cantidad de visitas al hospital durante el embarazo.|
+| **gained**| Peso en libras ganado por la madre durante el embarazo.|
+| **weight**| Peso en libras del bebé al momento de nacer.|
+| **lowbirthweight**| Clasificación del bebé, como bajo peso o normal.|
+| **sex**| Sexo del bebé.|
+| **habit**| Clasificación de la madre, como fumadora o no fumadora.|
+| **marital**| Clasificación de la madre al momento del nacimiento, como casada o no casada.|
+| **whitemom**| Clasificación de la madre, como persona blanca o no.|
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
