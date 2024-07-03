@@ -12,13 +12,15 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-
-library(DT)
 ```
 
 # Colaboradores
 + Marlon Barajas Acelas - 2202042
 + Jose Gabriel Tomas Zapata - 2201779
+
+```{r, message=FALSE, warning=FALSE}
+library(DT)
+```
 
 # Dataset asignado
 [**US Births**](https://www.openintro.org/data/index.php?data=births14) es un dataset que contiene información sobre mil nacimientos tomados de manera aleatoria en EE. UU. para el año 2014. Las variables tomadas (13) son, entre otras, las edades del padre y de la madre, la cantidad de semanas en gestación, el número de visitas al hospital, el peso ganado por la madre durante el embarazo y datos básicos sobre el bebé.
@@ -30,33 +32,96 @@ datatable(df, options = list(scrollX = TRUE))
 ```
 
 # Estudio de las variables
+Con las variables proporcionadas, es posible estudiar la relación entre los hábitos y las condiciones de la madre, con respecto al estado del bebé en el nacimiento. 
 
 ## Descripción de las variables
-| Variable| Descripción|
-| --------| -----------|
-| **fage**| Edad del padre.|
-| **mage**| Edad de la madre.|
-| **mature**| Estado de madurez de la madre.|
-| **weeks**| Cantidad de semanas de gestación.|
-| **premie**| Clasificación del nacimiento, como prematuro o a término.|
-| **visits**| Cantidad de visitas al hospital durante el embarazo.|
-| **gained**| Peso en libras ganado por la madre durante el embarazo.|
-| **weight**| Peso en libras del bebé al momento de nacer.|
-| **lowbirthweight**| Clasificación del bebé, como bajo peso o normal.|
-| **sex**| Sexo del bebé.|
-| **habit**| Clasificación de la madre, como fumadora o no fumadora.|
-| **marital**| Clasificación de la madre al momento del nacimiento, como casada o no casada.|
-| **whitemom**| Clasificación de la madre, como persona blanca o no.|
+| Variable| Descripción| Valores|
+| --------| -----------| -------|
+| **fage**| Edad del padre.| 15 - 85, NA|
+| **mage**| Edad de la madre.| 14 - 47|
+| **mature**| Estado de madurez de la madre.| "younger mom", "mature mom"|
+| **weeks**| Cantidad de semanas de gestación.| 21 - 46|
+| **premie**| Clasificación del nacimiento, como prematuro o a término.| "full term", "premie"|
+| **visits**| Cantidad de visitas al hospital durante el embarazo.| 0 - 30, NA|
+| **gained**| Peso en libras ganado por la madre durante el embarazo.| 0 - 98, NA|
+| **weight**| Peso en libras del bebé al momento de nacer.| 0.75 - 10.62|
+| **lowbirthweight**| Clasificación del bebé, como bajo peso o normal.| "not low", "low"|
+| **sex**| Sexo del bebé.| "male", "female"|
+| **habit**| Clasificación de la madre, como fumadora o no fumadora.| "nonsmoker", "smoker", NA|
+| **marital**| Clasificación de la madre al momento del nacimiento, como casada o no casada.| "married", "not married"|
+| **whitemom**| Clasificación de la madre, como persona blanca o no.| "white", "not white"|
 
+## Posibles relaciones a estudiar
++ Clasificación para el peso del bebé al momento de nacer en función de las semanas de gestación.
++ Clasificación del nacimiento según la cantidad de visitas al hospital o los hábitos de la madre.
++ Peso del bebé con respecto al ganado por la madre durante el embarazo.
 
+# Exploración inicial y descripción estadística
 
+## Edad de la madre
+```{r, echo=FALSE}
+hist(df$mage, breaks = 12, probability = TRUE, main = "Histograma de edades", xlab = "mage", xlim = c(14, 47), ylim = c(0, 0.08))
+curve(dnorm(x, mean(df$mage), sd(df$mage)), from = 15, to = 45, add = TRUE, col = "red")
+text(40, 0.07, paste("media: ", round(mean(df$mage), 2)))
+```
 
+## Semanas de gestación
+```{r, echo=FALSE}
+hist(df$weeks, breaks = 20, probability = TRUE, main = "Histograma de semanas en gestacion", xlab = "weeks", xlim = c(21, 46), ylim = c(0, 0.3))
+curve(dnorm(x, mean(df$weeks), sd(df$weeks)), from = 15, to = 45, add = TRUE, col = "red")
+text(26, 0.2, paste("media: ", round(mean(df$weeks), 2)))
+```
 
+## Clasificación de los nacimientos
+```{r, echo=FALSE}
+barplot(table(df$premie))
+```
 
+## Visitas al hospital
 
+### Omitiendo los valores NA
+```{r, echo=FALSE}
+hist(na.omit(df$visits), breaks = 20, probability = TRUE, main = "Histograma de visitas", xlab = "Visitas", xlim = c(0, 30), ylim = c(0, 0.13))
+curve(dnorm(x, mean(na.omit(df$visits)), sd(na.omit(df$visits))), from = 0, to = 30, add = TRUE, col = "red")
+text(25, 0.1, paste("media: ", round(mean(na.omit(df$visits)), 2)))
+```
 
+### Tomando los valores NA como 0 visitas
+```{r, echo=FALSE}
+visits_NA_as_0 <- ifelse(is.na(df$visits), 0, df$visits)
+hist(visits_NA_as_0, breaks = 20, probability = TRUE, main = "Histograma de visitas", xlab = "Visitas", xlim = c(0, 30), ylim = c(0, 0.13))
+curve(dnorm(x, mean(visits_NA_as_0), sd(visits_NA_as_0)), from = 0, to = 30, add = TRUE, col = "red")
+text(25, 0.1, paste("media: ", round(mean(visits_NA_as_0), 2)))
+```
 
+## Peso ganado por la madre
 
+### Omitiendo los valores NA
+```{r, echo=FALSE}
+hist(na.omit(df$gained), breaks = 20, probability = TRUE, main = "Histograma de visitas", xlab = "Visitas", xlim = c(0, 98), ylim = c(0, 0.04))
+curve(dnorm(x, mean(na.omit(df$gained)), sd(na.omit(df$gained))), from = 0, to = 98, add = TRUE, col = "red")
+text(80, 0.03, paste("media: ", round(mean(na.omit(df$gained)), 2)))
+```
+
+### Tomando los valores NA como 0 visitas
+```{r, echo=FALSE}
+gained_NA_as_0 <- ifelse(is.na(df$gained), 0, df$gained)
+hist(gained_NA_as_0, breaks = 20, probability = TRUE, main = "Histograma de visitas", xlab = "Visitas", xlim = c(0, 98), ylim = c(0, 0.04))
+curve(dnorm(x, mean(gained_NA_as_0), sd(gained_NA_as_0)), from = 0, to = 98, add = TRUE, col = "red")
+text(80, 0.03, paste("media: ", round(mean(gained_NA_as_0), 2)))
+```
+
+## Peso del bebé al nacer
+```{r, echo=FALSE}
+hist(df$weight, breaks = 20, probability = TRUE, main = "Histograma de pesos", xlab = "weight", xlim = c(0.75, 10.62), ylim = c(0, 0.4))
+curve(dnorm(x, mean(df$weight), sd(df$weight)), from = 0.75, to = 10.62, add = TRUE, col = "red")
+text(3, 0.3, paste("media: ", round(mean(df$weight), 2)))
+```
+
+## Clasificación del peso al nacer
+```{r, echo=FALSE}
+barplot(table(df$lowbirthweight))
+```
 
 
 
