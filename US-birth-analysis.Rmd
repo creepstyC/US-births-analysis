@@ -4,7 +4,7 @@ author: "Grupo A"
 date: "`r Sys.Date()`"
 output:
   html_document:
-    theme: journal
+    theme: united
     toc: yes
     toc_float:
       collapsed: true
@@ -22,19 +22,19 @@ knitr::opts_chunk$set(echo = TRUE)
 library(DT)
 ```
 
-# Dataset asignado
+# 1. Dataset asignado
 [**US Births**](https://www.openintro.org/data/index.php?data=births14) es un dataset que contiene información sobre mil nacimientos tomados de manera aleatoria en EE. UU. para el año 2014. Las variables tomadas (13) son, entre otras, las edades del padre y de la madre, la cantidad de semanas en gestación, el número de visitas al hospital, el peso ganado por la madre durante el embarazo y datos básicos sobre el bebé.
 
-## Carga del dataset
+## 1.1. Carga del dataset
 ```{r}
 df <- read.csv("births14.csv")
 datatable(df, options = list(scrollX = TRUE))
 ```
 
-# Estudio de las variables
+# 2. Estudio de las variables
 Con las variables proporcionadas, es posible estudiar la relación entre los hábitos y las condiciones de la madre, con respecto al estado del bebé en el nacimiento. 
 
-## Descripción de las variables
+## 2.1. Descripción de las variables
 | Variable| Descripción| Valores|
 | --------| -----------| -------|
 | **fage**| Edad del padre.| 15 - 85, NA|
@@ -51,42 +51,43 @@ Con las variables proporcionadas, es posible estudiar la relación entre los há
 | **marital**| Clasificación de la madre al momento del nacimiento, como casada o no casada.| "married", "not married"|
 | **whitemom**| Clasificación de la madre, como persona blanca o no.| "white", "not white"|
 
-## Posibles relaciones a estudiar
+## 2.2. Posibles relaciones a estudiar
 + Clasificación para el peso del bebé al momento de nacer en función de las semanas de gestación.
 + Clasificación del nacimiento según la cantidad de visitas al hospital o los hábitos de la madre.
 + Peso del bebé con respecto al ganado por la madre durante el embarazo.
 
-# Exploración inicial y descripción estadística
+# 3. Exploración inicial y descripción estadística
 
-## Edad de la madre
+## 3.1. Edad de la madre
 ```{r, echo=FALSE}
 hist(df$mage, breaks = 12, probability = TRUE, main = "Histograma de edades", xlab = "mage", xlim = c(14, 47), ylim = c(0, 0.08))
 curve(dnorm(x, mean(df$mage), sd(df$mage)), from = 15, to = 45, add = TRUE, col = "red")
 text(40, 0.07, paste("media: ", round(mean(df$mage), 2)))
 ```
 
-## Semanas de gestación
+## 3.2. Semanas de gestación
 ```{r, echo=FALSE}
 hist(df$weeks, breaks = 20, probability = TRUE, main = "Histograma de semanas en gestacion", xlab = "weeks", xlim = c(21, 46), ylim = c(0, 0.3))
 curve(dnorm(x, mean(df$weeks), sd(df$weeks)), from = 15, to = 45, add = TRUE, col = "red")
 text(26, 0.2, paste("media: ", round(mean(df$weeks), 2)))
 ```
 
-## Clasificación de los nacimientos
+## 3.3. Clasificación de los nacimientos
 ```{r, echo=FALSE}
 barplot(table(df$premie))
 ```
 
-## Visitas al hospital
+## 3.4. Visitas al hospital
+En esta fila se encuentran 56 valores NA.
 
-### Omitiendo los valores NA
+### 3.4.1. Omitiendo los valores NA
 ```{r, echo=FALSE}
 hist(na.omit(df$visits), breaks = 20, probability = TRUE, main = "Histograma de visitas", xlab = "Visitas", xlim = c(0, 30), ylim = c(0, 0.13))
 curve(dnorm(x, mean(na.omit(df$visits)), sd(na.omit(df$visits))), from = 0, to = 30, add = TRUE, col = "red")
 text(25, 0.1, paste("media: ", round(mean(na.omit(df$visits)), 2)))
 ```
 
-### Tomando los valores NA como 0 visitas
+### 3.4.2. Tomando los valores NA como 0 visitas
 ```{r, echo=FALSE}
 visits_NA_as_0 <- ifelse(is.na(df$visits), 0, df$visits)
 hist(visits_NA_as_0, breaks = 20, probability = TRUE, main = "Histograma de visitas", xlab = "Visitas", xlim = c(0, 30), ylim = c(0, 0.13))
@@ -94,34 +95,149 @@ curve(dnorm(x, mean(visits_NA_as_0), sd(visits_NA_as_0)), from = 0, to = 30, add
 text(25, 0.1, paste("media: ", round(mean(visits_NA_as_0), 2)))
 ```
 
-## Peso ganado por la madre
+Consecuentemente, se eliminarán éstas 56 filas, para evitar valores atípicos en los datos para el estudio.
 
-### Omitiendo los valores NA
+## 3.5. Peso ganado por la madre
+Para este caso, se identifican 42 valores NA en el dataset.
+
+### 3.5.1. Omitiendo los valores NA
 ```{r, echo=FALSE}
-hist(na.omit(df$gained), breaks = 20, probability = TRUE, main = "Histograma de visitas", xlab = "Visitas", xlim = c(0, 98), ylim = c(0, 0.04))
+hist(na.omit(df$gained), breaks = 20, probability = TRUE, main = "Histograma de peso ganado en el embarazo", xlab = "Visitas", xlim = c(0, 98), ylim = c(0, 0.04))
 curve(dnorm(x, mean(na.omit(df$gained)), sd(na.omit(df$gained))), from = 0, to = 98, add = TRUE, col = "red")
 text(80, 0.03, paste("media: ", round(mean(na.omit(df$gained)), 2)))
 ```
 
-### Tomando los valores NA como 0 visitas
+### 3.5.2. Tomando los valores NA como 0 libras
 ```{r, echo=FALSE}
 gained_NA_as_0 <- ifelse(is.na(df$gained), 0, df$gained)
-hist(gained_NA_as_0, breaks = 20, probability = TRUE, main = "Histograma de visitas", xlab = "Visitas", xlim = c(0, 98), ylim = c(0, 0.04))
+hist(gained_NA_as_0, breaks = 20, probability = TRUE, main = "Histograma de peso ganado en el embarazo", xlab = "Visitas", xlim = c(0, 98), ylim = c(0, 0.04))
 curve(dnorm(x, mean(gained_NA_as_0), sd(gained_NA_as_0)), from = 0, to = 98, add = TRUE, col = "red")
 text(80, 0.03, paste("media: ", round(mean(gained_NA_as_0), 2)))
 ```
 
-## Peso del bebé al nacer
+De igual forma que en el caso de las visitas, se eliminarán las filas con valores NA para el peso ganado.
+
+## 3.6. Peso del bebé al nacer
 ```{r, echo=FALSE}
-hist(df$weight, breaks = 20, probability = TRUE, main = "Histograma de pesos", xlab = "weight", xlim = c(0.75, 10.62), ylim = c(0, 0.4))
+hist(df$weight, breaks = 20, probability = TRUE, main = "Histograma de pesos en libras", xlab = "weight", xlim = c(0.75, 10.62), ylim = c(0, 0.4))
 curve(dnorm(x, mean(df$weight), sd(df$weight)), from = 0.75, to = 10.62, add = TRUE, col = "red")
 text(3, 0.3, paste("media: ", round(mean(df$weight), 2)))
 ```
 
-## Clasificación del peso al nacer
+## 3.7. Clasificación del peso al nacer
 ```{r, echo=FALSE}
 barplot(table(df$lowbirthweight))
 ```
+
+## 3.8. Clasificación del hábito de fumar de la madre
+```{r, echo=FALSE}
+barplot(table(df$habit))
+```
+
+## 3.9. Limpieza y tratamiento del dataset
+Inicialmente se convierten las variables categóricas de texto a un formato binario y se eliminan los valores NA.
+```{r}
+# "younger mom" = 0, "mature mom" = 1
+df$mature <- ifelse(df$mature == "younger mom", 0, ifelse(df$mature == "mature mom", 1, df$mature))
+df$mature <- as.numeric(df$mature)
+
+# "full term" = 0, "premie" = 1
+df$premie <- ifelse(df$premie == "full term", 0, ifelse(df$premie == "premie", 1, df$premie))
+df$premie <- as.numeric(df$premie)
+
+# "not low" = 0, "low" = 1
+df$lowbirthweight <- ifelse(df$lowbirthweight == "not low", 0, ifelse(df$lowbirthweight == "low", 1, df$lowbirthweight))
+df$lowbirthweight <- as.numeric(df$lowbirthweight)
+
+# "male" = 0, "female" = 1
+df$sex <- ifelse(df$sex == "male", 0, ifelse(df$sex == "female", 1, df$sex))
+df$sex <- as.numeric(df$sex)
+
+# "nonsmoker" = 0, "smoker" = 1
+df$habit <- ifelse(df$habit == "nonsmoker", 0, ifelse(df$habit == "smoker", 1, df$habit))
+df$habit <- as.numeric(df$habit)
+
+# "not married" = 0, "married" = 1
+df$marital <- ifelse(df$marital == "not married", 0, ifelse(df$marital == "married", 1, df$marital))
+df$marital <- as.numeric(df$marital)
+
+# "not white" = 0, "white" = 1
+df$whitemom <- ifelse(df$whitemom == "not white", 0, ifelse(df$whitemom == "white", 1, df$whitemom))
+df$whitemom <- as.numeric(df$whitemom)
+```
+
+```{r}
+df <- subset(df, select = -fage)
+df <- df[!is.na(df$visits), ]
+df <- df[!is.na(df$gained), ]
+df <- df[!is.na(df$habit), ]
+```
+
+# 4. Formulación, Selección y Evaluación de Modelos de Regresión Lineal
+
+## 4.1. Peso del bebé en función del ganado por la madre
+
+### 4.1.1. Regresión lineal simple
+
+$$
+x = Peso\ ganado\ por\ la\ madre\ (mom\_gained)\\
+y = Peso\ del\ bebé\ (birth\_weight)\\
+$$
+
+```{r}
+mom_gained <- df$gained
+birth_weight <- df$weight
+
+x_bar <- mean(mom_gained)
+y_bar <- mean(birth_weight)
+
+n = length(mom_gained)
+print(paste("n =", n))
+```
+
+### 4.1.2. Pendiente e intercepto para la recta de regresión
+$$
+\hat{\beta_{1}}=\frac{\sum_{i=1}^{894}(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^{894}(x_i-\bar{x})^{2}}\\
+\hat{\beta_{0}}=\bar{y}-\hat{\beta_{1}}\bar{x}
+$$
+```{r}
+B1_est = sum((mom_gained-x_bar)*(birth_weight-y_bar))/sum((mom_gained-x_bar)**2)
+B0_est = y_bar - (B1_est*x_bar)
+```
+
+### 4.1.3. Gráfica de los datos y curva de regresión
+$$
+\hat{y}=\hat{\beta_{0}}+\hat{\beta_{1}}x=6.84+0.012x
+$$
+```{r}
+plot(mom_gained, birth_weight)
+curve(B0_est+B1_est*x, add = TRUE, col = "deeppink")
+text(80, 3.5, paste("B_0=", round(B0_est, 2)))
+text(80, 2.8, paste("B_1=", round(B1_est, 3)))
+```
+
+### 4.1.4. Varianza residual
+```{r}
+errors = birth_weight - (B0_est+(B1_est*mom_gained))
+re_var = sum(errors**2)/(n-2)
+```
+
+La varianza residual es de `r round(re_var, 4)`.
+
+### 4.1.5. Coeficiente de determinación (R^2)
+
+Usando la suma de cuadrados del error (SCE) y la suma total de cuadrados corregida (STCC):
+```{r}
+sce = sum(errors**2)
+stcc = sum((birth_weight-y_bar)**2)
+
+r2 = 1 - sce/stcc
+r = cor(mom_gained, birth_weight)
+```
+
+El valor de R^2 es `r round(r2, 4)` y el valor de R es `r round(r, 4)`.
+
+
 
 
 
