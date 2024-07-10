@@ -60,21 +60,21 @@ Con las variables proporcionadas, es posible estudiar la relación entre los há
 
 ## 3.1. Edad de la madre
 ```{r, echo=FALSE}
-hist(df$mage, breaks = 12, probability = TRUE, main = "Histograma de edades", xlab = "mage", xlim = c(14, 47), ylim = c(0, 0.08))
+hist(df$mage, breaks = 12, col = "orange", probability = TRUE, main = "Histograma de edades", xlab = "mage", xlim = c(14, 47), ylim = c(0, 0.08))
 curve(dnorm(x, mean(df$mage), sd(df$mage)), from = 15, to = 45, add = TRUE, col = "red")
 text(40, 0.07, paste("media: ", round(mean(df$mage), 2)))
 ```
 
 ## 3.2. Semanas de gestación
 ```{r, echo=FALSE}
-hist(df$weeks, breaks = 20, probability = TRUE, main = "Histograma de semanas en gestacion", xlab = "weeks", xlim = c(21, 46), ylim = c(0, 0.3))
+hist(df$weeks, breaks = 20, col = "pink", probability = TRUE, main = "Histograma de semanas en gestacion", xlab = "weeks", xlim = c(21, 46), ylim = c(0, 0.3))
 curve(dnorm(x, mean(df$weeks), sd(df$weeks)), from = 15, to = 45, add = TRUE, col = "red")
 text(26, 0.2, paste("media: ", round(mean(df$weeks), 2)))
 ```
 
 ## 3.3. Clasificación de los nacimientos
 ```{r, echo=FALSE}
-barplot(table(df$premie))
+barplot(table(df$premie), col = "brown")
 ```
 
 ## 3.4. Visitas al hospital
@@ -82,7 +82,7 @@ En esta fila se encuentran 56 valores NA.
 
 ### 3.4.1. Omitiendo los valores NA
 ```{r, echo=FALSE}
-hist(na.omit(df$visits), breaks = 20, probability = TRUE, main = "Histograma de visitas", xlab = "Visitas", xlim = c(0, 30), ylim = c(0, 0.13))
+hist(na.omit(df$visits), breaks = 20, col = "yellow", probability = TRUE, main = "Histograma de visitas", xlab = "Visitas", xlim = c(0, 30), ylim = c(0, 0.13))
 curve(dnorm(x, mean(na.omit(df$visits)), sd(na.omit(df$visits))), from = 0, to = 30, add = TRUE, col = "red")
 text(25, 0.1, paste("media: ", round(mean(na.omit(df$visits)), 2)))
 ```
@@ -90,7 +90,7 @@ text(25, 0.1, paste("media: ", round(mean(na.omit(df$visits)), 2)))
 ### 3.4.2. Tomando los valores NA como 0 visitas
 ```{r, echo=FALSE}
 visits_NA_as_0 <- ifelse(is.na(df$visits), 0, df$visits)
-hist(visits_NA_as_0, breaks = 20, probability = TRUE, main = "Histograma de visitas", xlab = "Visitas", xlim = c(0, 30), ylim = c(0, 0.13))
+hist(visits_NA_as_0, breaks = 20, col = "yellowgreen", probability = TRUE, main = "Histograma de visitas", xlab = "Visitas", xlim = c(0, 30), ylim = c(0, 0.13))
 curve(dnorm(x, mean(visits_NA_as_0), sd(visits_NA_as_0)), from = 0, to = 30, add = TRUE, col = "red")
 text(25, 0.1, paste("media: ", round(mean(visits_NA_as_0), 2)))
 ```
@@ -102,7 +102,7 @@ Para este caso, se identifican 42 valores NA en el dataset.
 
 ### 3.5.1. Omitiendo los valores NA
 ```{r, echo=FALSE}
-hist(na.omit(df$gained), breaks = 20, probability = TRUE, main = "Histograma de peso ganado en el embarazo", xlab = "Visitas", xlim = c(0, 98), ylim = c(0, 0.04))
+hist(na.omit(df$gained), breaks = 20, col = "green3", probability = TRUE, main = "Histograma de peso ganado en el embarazo", xlab = "Visitas", xlim = c(0, 98), ylim = c(0, 0.04))
 curve(dnorm(x, mean(na.omit(df$gained)), sd(na.omit(df$gained))), from = 0, to = 98, add = TRUE, col = "red")
 text(80, 0.03, paste("media: ", round(mean(na.omit(df$gained)), 2)))
 ```
@@ -110,7 +110,7 @@ text(80, 0.03, paste("media: ", round(mean(na.omit(df$gained)), 2)))
 ### 3.5.2. Tomando los valores NA como 0 libras
 ```{r, echo=FALSE}
 gained_NA_as_0 <- ifelse(is.na(df$gained), 0, df$gained)
-hist(gained_NA_as_0, breaks = 20, probability = TRUE, main = "Histograma de peso ganado en el embarazo", xlab = "Visitas", xlim = c(0, 98), ylim = c(0, 0.04))
+hist(gained_NA_as_0, breaks = 20, col = "greenyellow", probability = TRUE, main = "Histograma de peso ganado en el embarazo", xlab = "Visitas", xlim = c(0, 98), ylim = c(0, 0.04))
 curve(dnorm(x, mean(gained_NA_as_0), sd(gained_NA_as_0)), from = 0, to = 98, add = TRUE, col = "red")
 text(80, 0.03, paste("media: ", round(mean(gained_NA_as_0), 2)))
 ```
@@ -119,19 +119,19 @@ De igual forma que en el caso de las visitas, se eliminarán las filas con valor
 
 ## 3.6. Peso del bebé al nacer
 ```{r, echo=FALSE}
-hist(df$weight, breaks = 20, probability = TRUE, main = "Histograma de pesos en libras", xlab = "weight", xlim = c(0.75, 10.62), ylim = c(0, 0.4))
-curve(dnorm(x, mean(df$weight), sd(df$weight)), from = 0.75, to = 10.62, add = TRUE, col = "red")
+hist(df$weight, breaks = 20, col = "brown3", probability = TRUE, main = "Histograma de pesos en libras", xlab = "weight", xlim = c(0.75, 10.62), ylim = c(0, 0.4))
+curve(dnorm(x, mean(df$weight), sd(df$weight)), from = 0.75, to = 10.62, add = TRUE, col = "black")
 text(3, 0.3, paste("media: ", round(mean(df$weight), 2)))
 ```
 
 ## 3.7. Clasificación del peso al nacer
 ```{r, echo=FALSE}
-barplot(table(df$lowbirthweight))
+barplot(table(df$lowbirthweight), col = "yellow3")
 ```
 
 ## 3.8. Clasificación del hábito de fumar de la madre
 ```{r, echo=FALSE}
-barplot(table(df$habit))
+barplot(table(df$habit), col = "orange3")
 ```
 
 ## 3.9. Limpieza y tratamiento del dataset
@@ -173,7 +173,7 @@ df <- df[!is.na(df$gained), ]
 df <- df[!is.na(df$habit), ]
 ```
 
-# 4. Formulación, Selección y Evaluación de Modelos de Regresión Lineal
+# 4. Formulación, Selección y Evaluación de Modelos de Regresión
 
 ## 4.1. Peso del bebé en función del ganado por la madre
 
@@ -237,10 +237,24 @@ r = cor(mom_gained, birth_weight)
 
 El valor de R^2 es `r round(r2, 4)` y el valor de R es `r round(r, 4)`.
 
+## 4.2.
 
 
+## 4.3.
+
+# 5. Conclusiones
+
+## 5.1. Peso del bebé en función del ganado por la madre
+
++ el 2% de la variabilidad en el peso del recién nacido, es explicado por el
+modelo. 
+
++ existe una correlación positiva y leve entre el peso del bebé y el ganado por la madre.
+
+## 5.2. 
 
 
+## 5.3.
 
 
 
